@@ -1,0 +1,29 @@
+name: Continuous Integration
+
+jobs:
+  uv-example:
+    name: python
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.0"
+          enable-cache: true
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+
+      - name: Lint
+        run: uv run ruff check
+
+      - name: Test
+        run: uv run --locked pytest
+
+      - name: Prune Cache
+        run: uv cache prune --ci
