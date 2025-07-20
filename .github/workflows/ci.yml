@@ -4,9 +4,10 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  workflow_dispatch:
 
 jobs:
-  uv-example:
+  Integration:
     name: python
     runs-on: ubuntu-latest
 
