@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 class TestChapter2:
     def test_simple_tokenizer_v1(self, all_tokens: list[str]):
         # given
-        from simple_tokenizer_v1 import SimpleTokenizerV1
+        from llm.simple_tokenizer_v1 import SimpleTokenizerV1
 
         vocabulary = {token: integer for integer, token in enumerate(all_tokens)}
         tokenizer = SimpleTokenizerV1(vocabulary)
@@ -52,7 +52,7 @@ class TestChapter2:
 
     def test_simple_tokenizer_v2(self, all_tokens: list[str]):
         # given
-        from simple_tokenizer_v2 import SimpleTokenizerV2
+        from llm.simple_tokenizer_v2 import SimpleTokenizerV2
 
         all_tokens.extend(
             [SimpleTokenizerV2.END_OF_TEXT, SimpleTokenizerV2.UNKNOWN_TOKEN]
@@ -94,7 +94,7 @@ class TestChapter2:
     def test_byte_pair_encoding(self, preprocessed: list[str]):
         # given
         import tiktoken
-        from simple_tokenizer_v2 import SimpleTokenizerV2
+        from llm.simple_tokenizer_v2 import SimpleTokenizerV2
 
         tokenizer = tiktoken.get_encoding("gpt2")
         text = (
@@ -247,6 +247,19 @@ class TestChapter2:
         # then
         assert input_embeddings.shape == Size([8, 4, 256])
 
+    def test_bpe_for_unknown_words(self):
+        # given
+        import tiktoken
+
+        tokenizer = tiktoken.get_encoding("gpt2")
+        ids = tokenizer.encode("Akwirw ier.")
+
+        # when
+        decoded = tokenizer.decode(ids)
+
+        # then
+        assert decoded == "Akwirw ier."
+
     def dataloader_v1(
         self,
         raw_text: str,
@@ -258,7 +271,7 @@ class TestChapter2:
         num_workers=0,
     ) -> DataLoader[tuple[Tensor, Tensor]]:
         import tiktoken
-        from gpt_dataset_v1 import GPTDatasetV1
+        from llm.gpt_dataset_v1 import GPTDatasetV1
 
         tokenizer = tiktoken.get_encoding("gpt2")
         dataset = GPTDatasetV1(raw_text, tokenizer, max_length, stride)

@@ -10,3 +10,5 @@ wheels/
 .venv
 
 the-verdict.txt
+
+.coverage
