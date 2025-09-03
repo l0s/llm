@@ -29,7 +29,7 @@ jobs:
         run: uv run ruff check
 
       - name: Test
-        run: uv run --locked pytest --cov-fail-under=80 --cov=llm src/tests
+        run: uv run --locked pytest --cov-fail-under=80 --cov=llm src/tests -n auto
 
       - name: Prune Cache
         run: uv cache prune --ci
