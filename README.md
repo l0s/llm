@@ -15,3 +15,10 @@ uv run ruff format
 ```
 uv run pytest
 ```
+
+Mutation Testing
+
+```
+uv run mut.py --target llm --unit-test tests --show-mutants --runner pytest --colored-output
+```
+These are not included in the continuous integration build as they take more than 10 minutes.

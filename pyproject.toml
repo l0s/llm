@@ -6,7 +6,7 @@ authors = [
   { name = "Carlos Macasaet" }
 ]
 readme = "README.md"
-requires-python = "==3.12.*"
+requires-python = "==3.11.*"
 dependencies = [
     "matplotlib>=3.10.6",
     "more-itertools>=10.7.0",
@@ -20,6 +20,7 @@ documentation = "https://github.com/rasbt/LLMs-from-scratch"
 
 [dependency-groups]
 dev = [
+    "mutpy>=0.6.1",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
     "pytest-xdist>=3.8.0",
