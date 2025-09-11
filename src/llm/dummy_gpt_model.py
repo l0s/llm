@@ -3,6 +3,9 @@ import torch.nn as nn
 
 from llm.configuration import Configuration
 
+from torch import Tensor
+from jaxtyping import Float
+
 
 class DummyGptModel(nn.Module):
     def __init__(self, configuration: Configuration):
@@ -28,7 +31,9 @@ class DummyGptModel(nn.Module):
             bias=configuration.bias,
         )
 
-    def forward(self, input_indices: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self, input_indices: Float[Tensor, "batch_size embedding_dimensions"]
+    ) -> Float[Tensor, "batch_size embedding_dimensions"]:
         _batch_size, sequence_length = input_indices.shape
         token_embeddings = self.token_embedding(input_indices)
         position_embeddings = self.position_embedding(
@@ -54,5 +59,7 @@ class DummyLayerNorm(nn.Module):
     def __init__(self, normalized_shape: int, 𝜖: float = 1e-5):
         super().__init__()
 
-    def forward(self, input):
+    def forward(
+        self, input: Float[Tensor, "batch_size embedding_dimensions"]
+    ) -> Float[Tensor, "batch_size embedding_dimensions"]:
         return input
