@@ -1,24 +1,31 @@
 import sys
 import pytest
 import torch
+
 from torch import Tensor, nn
-from llm.configuration import Configuration
-from llm.deep_neural_network import DeepNeuralNetwork
-from llm.dummy_gpt_model import DummyGptModel
+
+from beartype import beartype
 
 import tiktoken
 
-from llm.feed_forward import FeedForward
-from llm.gaussian_error_linear_unit import GaussianErrorLinearUnit
-from llm.generative_pretrained_transformer import GenerativePretrainedTransformerModel
-from llm.layer_norm import LayerNorm
-from llm.transformer_block import TransformerBlock
+from jaxtyping import Float, Int, jaxtyped, install_import_hook
+
+with install_import_hook("llm", "beartype.beartype"):
+    from llm import Configuration
+    from llm import DeepNeuralNetwork
+    from llm import DummyGptModel
+    from llm import FeedForward
+    from llm import GaussianErrorLinearUnit
+    from llm import GenerativePretrainedTransformerModel
+    from llm import LayerNorm
+    from llm import TransformerBlock
 
 GPT_CONFIG_124M = Configuration()
 
 
 class TestChapter4:
-    def test_dummy_gpt_model(self, batch: Tensor):
+    @jaxtyped(typechecker=beartype)
+    def test_dummy_gpt_model(self, batch: Int[Tensor, "batch_size word_count"]):
         # given
         torch.manual_seed(123)
         model = DummyGptModel(GPT_CONFIG_124M)
@@ -106,12 +113,16 @@ class TestChapter4:
         # then
         assert outputs.shape == torch.Size([2, 3, GPT_CONFIG_124M.embedding_dimension])
 
-    def print_gradients(self, model: nn.Module, inputs: Tensor):
+    @jaxtyped(typechecker=beartype)
+    def print_gradients(
+        self, model: nn.Module, inputs: Float[Tensor, "batch_size embedding_size"]
+    ):
         for name, gradient in self.calculate_gradients(model, inputs):
             print(f"{name} has a gradient with mean of {gradient}")
 
+    @jaxtyped(typechecker=beartype)
     def calculate_gradients(
-        self, model: nn.Module, inputs: Tensor
+        self, model: nn.Module, inputs: Float[Tensor, "batch_size embedding_size"]
     ) -> list[tuple[str, float]]:
         # execute a forward pass
         output = model(inputs)
@@ -215,7 +226,8 @@ class TestChapter4:
         # then
         assert inputs.shape == output.shape
 
-    def test_gpt_model(self, batch: Tensor):
+    @jaxtyped(typechecker=beartype)
+    def test_gpt_model(self, batch: Int[Tensor, "batch_size word_count"]):
         # given
         torch.manual_seed(123)
         model = GenerativePretrainedTransformerModel(GPT_CONFIG_124M)
@@ -289,6 +301,7 @@ class TestChapter4:
         total_params = sum(p.numel() for p in model.parameters())
         assert total_params == 838_220_800
 
+    @jaxtyped(typechecker=beartype)
     def test_generate_text(self, tokenizer: tiktoken.Encoding):
         # given
         torch.manual_seed(123)
@@ -317,13 +330,14 @@ class TestChapter4:
         decoded_text = tokenizer.decode(output.squeeze(0).tolist())
         assert decoded_text == "Hello, I am Featureiman Byeswickattribute argue"
 
+    @jaxtyped(typechecker=beartype)
     def generate_text_simple(
         self,
         model: nn.Module,
-        index: Tensor,
+        index: Int[Tensor, "batch_size input_tokens"],
         max_new_tokens: int,
         context_size: int,
-    ) -> Tensor:
+    ) -> Int[Tensor, "batch_size output_tokens"]:
         """
         :param model:
         :param index: Tensor[(batch, num_tokens)] in the current context
@@ -348,7 +362,10 @@ class TestChapter4:
         return index
 
     @pytest.fixture(scope="class")
-    def batch(self, tokenizer: tiktoken.Encoding) -> Tensor:
+    @jaxtyped(typechecker=beartype)
+    def batch(
+        self, tokenizer: tiktoken.Encoding
+    ) -> Int[Tensor, "num_batches words_per_batch"]:
         text1 = "Every effort moves you"
         text2 = "Every day holds a"
         texts = [text1, text2]

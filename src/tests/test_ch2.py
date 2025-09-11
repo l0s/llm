@@ -4,6 +4,8 @@ from torch import Tensor, arange, tensor, manual_seed, Size
 from torch.nn import Embedding
 from torch.utils.data import DataLoader
 
+from jaxtyping import Float
+
 
 class TestChapter2:
     def test_simple_tokenizer_v1(self, all_tokens: list[str]):
@@ -194,7 +196,7 @@ class TestChapter2:
         2.7 Creating token embeddings
         """
         # given
-        input_ids = tensor([2, 3, 5, 1])
+        input_ids: Float[Tensor, "4"] = tensor([2, 3, 5, 1])
         vocabulary_size = 6
         output_dimensions = 3
 

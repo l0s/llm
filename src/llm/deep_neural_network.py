@@ -2,6 +2,8 @@ from torch import nn, Tensor
 from collections.abc import Callable
 from llm.gaussian_error_linear_unit import GaussianErrorLinearUnit
 
+from jaxtyping import Float
+
 
 class DeepNeuralNetwork(nn.Module):
     """
@@ -31,7 +33,9 @@ class DeepNeuralNetwork(nn.Module):
         ]
         self.layers = nn.ModuleList(layers)
 
-    def forward(self, inputs: Tensor) -> Tensor:
+    def forward(
+        self, inputs: Float[Tensor, "batch_size embedding_dimensions"]
+    ) -> Float[Tensor, "batch_size embedding_dimensions"]:
         for layer in self.layers:
             layer_output = layer(inputs)
             inputs = (
