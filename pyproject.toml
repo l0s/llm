@@ -13,7 +13,7 @@ dependencies = [
     "more-itertools~=11.1.0",
     "numpy~=2.4.6",
     "tiktoken~=0.13.0",
-    "torch~=2.12.1",
+    "torch~=2.13.0",
 ]
 
 [project.urls]
