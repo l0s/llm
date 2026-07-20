@@ -9,7 +9,7 @@ readme = "README.md"
 requires-python = "~=3.11.15"
 dependencies = [
     "jaxtyping~=0.3.11",
-    "matplotlib~=3.10.6",
+    "matplotlib~=3.11.1",
     "more-itertools~=11.1.0",
     "numpy~=2.4.6",
     "tiktoken~=0.13.0",
