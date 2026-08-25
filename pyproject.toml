@@ -12,7 +12,7 @@ dependencies = [
     "matplotlib~=3.11.1",
     "more-itertools~=11.1.0",
     "numpy~=2.4.6",
-    "tiktoken~=0.13.0",
+    "tiktoken~=0.14.0",
     "torch~=2.13.0",
 ]
 
